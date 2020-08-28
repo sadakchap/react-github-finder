@@ -48,12 +48,23 @@ class App extends Component {
 		}
 	}
 
+	clearUsers = () => {
+		this.setState({
+			loading: false,
+			users: []
+		});
+	}
+
 	render() {
 		return (
 		<div className="App">
 			<Navbar />
 			<div className="container" style={{ minHeight: '100vh'}}>
-				<UserSearch searchUsers={this.searchUsers} />
+				<UserSearch 
+					searchUsers={this.searchUsers} 
+					clearUsers={this.clearUsers}
+					showClear={this.state.users.length > 0 ? true : false} 
+				/>
 				<Users loading={this.state.loading} users={this.state.users} />
 			</div>
 		</div>
