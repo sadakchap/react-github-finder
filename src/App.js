@@ -4,28 +4,15 @@ import './App.css';
 import Users from './components/users/Users';
 import axios from 'axios';
 import UserSearch from './components/users/UserSearch';
-
+import Alert from './components/layout/Alert';
 
 class App extends Component {
 
 	state = {
 		users: [],
-		loading: false
+		loading: false,
+		alert: null
 	}
-
-	// async componentDidMount(){
-	// 	this.setState({ loading: true })
-	// 	const url = `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`;
-		
-	// 	try {
-	// 		const res = await axios.get(url);
-	// 		this.setState({ loading: false, users: res.data})
-			
-	// 	} catch (err) {
-	// 		console.log('ERROR WHILE FECTHING USER DATA');
-	// 		console.log(err);
-	// 	}
-	// }
 
 	searchUsers = async (query) => {
 		this.setState({
@@ -55,15 +42,27 @@ class App extends Component {
 		});
 	}
 
+	setAlert = (msg, type) => {
+		console.log('setting alert')
+		this.setState({
+			alert: { msg, type}
+		});
+		setTimeout(() => {
+			this.setState({ alert: null })
+		}, 5000);
+	}
+
 	render() {
 		return (
 		<div className="App">
 			<Navbar />
 			<div className="container" style={{ minHeight: '100vh'}}>
+					<Alert alert={this.state.alert} />
 				<UserSearch 
 					searchUsers={this.searchUsers} 
 					clearUsers={this.clearUsers}
 					showClear={this.state.users.length > 0 ? true : false} 
+					setAlert={this.setAlert}
 				/>
 				<Users loading={this.state.loading} users={this.state.users} />
 			</div>
