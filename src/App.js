@@ -3,6 +3,8 @@ import Navbar from './components/layout/Navbar';
 import './App.css';
 import Users from './components/users/Users';
 import axios from 'axios';
+import UserSearch from './components/users/UserSearch';
+
 
 class App extends Component {
 
@@ -17,8 +19,6 @@ class App extends Component {
 		
 		try {
 			const res = await axios.get(url);
-			console.log(res.data);
-
 			this.setState({ loading: false, users: res.data})
 			
 		} catch (err) {
@@ -31,6 +31,7 @@ class App extends Component {
 		return (
 		<div className="App">
 			<Navbar />
+			<UserSearch />
 			<div className="container" style={{ minHeight: '100vh'}}>
 				<Users loading={this.state.loading} users={this.state.users} />
 			</div>
