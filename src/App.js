@@ -1,10 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Navbar from './components/layout/Navbar';
 import './App.css';
 import Users from './components/users/Users';
 import axios from 'axios';
 import UserSearch from './components/users/UserSearch';
 import Alert from './components/layout/Alert';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import About from './components/pages/About';
+
 
 class App extends Component {
 
@@ -54,19 +57,37 @@ class App extends Component {
 
 	render() {
 		return (
-		<div className="App">
-			<Navbar />
-			<div className="container" style={{ minHeight: '100vh'}}>
-					<Alert alert={this.state.alert} />
-				<UserSearch 
-					searchUsers={this.searchUsers} 
-					clearUsers={this.clearUsers}
-					showClear={this.state.users.length > 0 ? true : false} 
-					setAlert={this.setAlert}
-				/>
-				<Users loading={this.state.loading} users={this.state.users} />
-			</div>
-		</div>
+			<Router>
+				<div className="App">
+					<Navbar />
+					<div className="container" style={{ minHeight: '100vh'}}>
+						<Alert alert={this.state.alert} />
+						<Switch>
+							<Route 
+								exact
+								path='/'
+								render={ props => 
+									<Fragment>
+										<UserSearch 
+											searchUsers={this.searchUsers} 
+											clearUsers={this.clearUsers}
+											showClear={this.state.users.length > 0 ? true : false} 
+											setAlert={this.setAlert}
+										/>
+										<Users loading={this.state.loading} users={this.state.users} />
+									</Fragment>
+								}
+							/>
+
+							<Route 
+								exact
+								path='/about'
+								component={About}
+							/>
+						</Switch>
+					</div>
+				</div>
+			</Router>
 		);
 	}
 }
