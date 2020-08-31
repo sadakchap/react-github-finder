@@ -8,6 +8,7 @@ import Alert from './components/layout/Alert';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import About from './components/pages/About';
 import User from './components/users/User';
+import GithubState from './context/github/GithubState';
 
 
 const App = () => {
@@ -79,6 +80,8 @@ const App = () => {
 	}
 
 	return (
+		<GithubState>
+			
 		<Router>
 			<div className="App">
 				<Navbar />
@@ -125,7 +128,8 @@ const App = () => {
 					</Switch>
 				</div>
 			</div>
-		</Router>
+			</Router>
+		</GithubState>
 	);
 }
 
