@@ -7,6 +7,7 @@ import UserSearch from './components/users/UserSearch';
 import Alert from './components/layout/Alert';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import About from './components/pages/About';
+import User from './components/users/User';
 
 
 class App extends Component {
@@ -14,7 +15,9 @@ class App extends Component {
 	state = {
 		users: [],
 		loading: false,
-		alert: null
+		alert: null,
+		user: {},
+		repos: []
 	}
 
 	searchUsers = async (query) => {
@@ -55,6 +58,37 @@ class App extends Component {
 		}, 5000);
 	}
 
+	getUser = async (username) => {
+		this.setState({ loading: true});
+		const url = `https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`;
+		try {
+			const res = await axios.get(url);
+			console.log(res.data);
+			this.setState({
+				loading: false,
+				user: res.data
+			});
+		} catch (err) {
+			console.log('ERROR WHILE FETCHING A USER DATA');
+			console.log(err);
+		}
+	}
+
+	getUserRepos = async (username) => {
+		this.setState({ loading: true});
+		const url = `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`;
+		try {
+			const res = await axios.get(url);
+			this.setState({
+				repos: res.data,
+				loading: false
+			});
+		} catch (err) {
+			console.log('Error while fetching user REPOS');
+			console.log(err);
+		}
+	}
+
 	render() {
 		return (
 			<Router>
@@ -84,6 +118,22 @@ class App extends Component {
 								path='/about'
 								component={About}
 							/>
+
+							<Route 
+								exact
+								path={`/user/:login`}
+								render={ props => (
+									<User 
+										{ ...props} 
+										getUser={this.getUser} 
+										user={this.state.user} 
+										loading={this.state.loading} 
+										getUserRepos={this.getUserRepos}
+										repos={this.state.repos}
+									/>
+								)}
+							/>
+
 						</Switch>
 					</div>
 				</div>
