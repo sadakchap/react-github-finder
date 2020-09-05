@@ -1,18 +1,24 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import GithubContext from '../../context/github/githubContext';
+import { useContext } from 'react';
+import AlertContext from '../../context/alert/alertContext';
 
 
-const Search = ({ searchUsers, setAlert, showClear, clearUsers }) => {
+const Search = () => {
+
+    const githubContext = useContext(GithubContext);
+    const { setAlert } = useContext(AlertContext);
 
     const [text, setText] = useState('');
-    
 
+    const showClear = githubContext.users.length > 0 ? true : false
+    
     const handleChange = (e) => setText(e.target.value);
 
     const onFormSubmit = (e) => {
         e.preventDefault();
         if(text){
-            searchUsers(text);
+            githubContext.searchUsers(text);
             setText('')
         }else{
             // handle empty request
@@ -26,17 +32,11 @@ const Search = ({ searchUsers, setAlert, showClear, clearUsers }) => {
                 <input type="text" name="text" id="" placeholder="Search Users..." value={text}  onChange={handleChange}/>
                 <input type="submit" value="Search" className="btn btn-dark btn-block" />
             </form>
-            {showClear ? <button className="btn btn-light btn-block" onClick={clearUsers}>Clear</button> : ''}
+            {showClear ? <button className="btn btn-light btn-block" onClick={githubContext.clearUsers}>Clear</button> : ''}
             
         </div>
     );
 }
 
-Search.propTypes = {
-    searchUsers: PropTypes.func.isRequired,
-    clearUsers: PropTypes.func.isRequired,
-    showClear: PropTypes.bool.isRequired,
-    setAlert: PropTypes.func.isRequired,
-};
 
 export default Search
